@@ -18,12 +18,11 @@ public class Board {
     private static int[] NEIGHBORS_X = new int[]{0, 1, 0, -1};
     private static int[] NEIGHBORS_Y = new int[]{1, 0, -1, 0};
 
-    public Board(int[][] blocks) {
+     public Board(int[][] blocks) {
         // construct a board from an n-by-n array of board
-        //this.board = board;
         n = blocks.length;
-        manhattanNumber = -1;
-        hammingNumber = -1;
+        manhattanNumber = 0;
+        hammingNumber = 0;
         this.board = new int[n][n];
         for (int row = 0; row < n; row++) {
             for (int col = 0; col < n; col++) {
@@ -31,7 +30,14 @@ public class Board {
                 if (this.board[row][col] == 0) {
                     rowBlack = row;
                     colBlack = col;
+                }else{
+                    int deltaX = Math.abs(row - (board[row][col] - 1) / n);
+                    int deltaY = Math.abs(col - (board[row][col] - 1) % n);
+                    manhattanNumber += deltaX + deltaY;
+                    if (board[row][col] != row * n + col + 1)
+                        hammingNumber++;
                 }
+
             }
         }
     }
@@ -41,39 +47,13 @@ public class Board {
     }
 
     public int hamming() {
-        if (hammingNumber > -1)
-            return hammingNumber;
-
-        hammingNumber = 0;
-
-        for (int i = 0; i < n; i++)
-            for (int j = 0; j < n; j++)
-                if (board[i][j] != 0 && board[i][j] != i * n + j + 1)
-                    hammingNumber++;
-
         return hammingNumber;
     }
 
-
     // sum of Manhattan distances between board and goal
     public int manhattan() {
-        if (manhattanNumber > -1) {
-            return manhattanNumber;
-        }
-        manhattanNumber = 0;
-        for (int i = 0; i < dimension(); i++) {
-            for (int j = 0; j < dimension(); j++) {
-                if (board[i][j] == 0) {
-                    continue;
-                }
-                int deltaX = Math.abs(i - (board[i][j] - 1) / n);
-                int deltaY = Math.abs(j - (board[i][j] - 1) % n);
-                manhattanNumber += deltaX + deltaY;
-            }
-        }
         return manhattanNumber;
     }
-
     // is this board the goal board?
     public boolean isGoal() {
 
